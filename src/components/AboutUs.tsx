@@ -1,12 +1,21 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useGetImageCat } from "../../mocks/Caracters";
 import Loader from "../hooks/Loader";
-import random from '../assets/random.svg'
+import random from "../assets/random.svg";
+import CommentsCard from "../hooks/CommentsCard";
 function AboutUs() {
   const [changeImage, setChangeImage] = useState(false);
   const { dataCat, loading } = useGetImageCat(changeImage);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setChangeImage(!changeImage);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, [changeImage]);
+
   return (
-    <div className="bg-slate-900">
+    <div className="bg-slate-900 h-auto">
       <main className="md:flex w-full h-auto md:min-h-[100vh] gap-3 justify-around items-center">
         <div className="flex p-4 md:p-0 items-center md:items-start md:text-start text-center md:w-[30%] h-auto gap-5 flex-col text-white">
           <h1 className="text-orange-500 font-semibold">3D Game Development</h1>
@@ -27,11 +36,11 @@ function AboutUs() {
           </a>
         </div>
         <div className="flex h-auto md:max-w-[30%] justify-center items-center flex-col">
-          <figure className="flex justify-center relative min-h-[300px] bg-cover">
+          <figure className="flex justify-center px-5 md:px-0 relative min-h-[200px] md:min-h-[300px] bg-cover">
             {loading ? (
-             <div className="flex justify-center  h-[300px] items-center">
-                 <Loader />
-             </div>
+              <div className="flex justify-center  h-[300px] items-center">
+                <Loader />
+              </div>
             ) : (
               <img
                 src={dataCat[0]?.url}
@@ -40,13 +49,20 @@ function AboutUs() {
               />
             )}
             <button
-              className="bg-orange-500 transform transition-transform duration-300 hover:scale-110 h-auto rounded-full absolute top-[50%] right-[-20px] w-fit px-3 py-2"
+              className="bg-orange-500 transform transition-transform duration-300 hover:scale-110 h-auto rounded-full absolute top-[50%]  right-[-10px] md:right-[-20px] w-fit px-3 py-2"
               onClick={() => setChangeImage(!changeImage)}
             >
-              <img src={random} className="w-[20px]" alt="random" />
+              <img
+                src={random}
+                className="w-[20px]"
+                alt="random"
+              />
             </button>
           </figure>
         </div>
+      </main>
+      <main className="md:flex w-full h-auto md:min-h-[100vh] gap-3 justify-around items-center">
+        <CommentsCard />
       </main>
     </div>
   );
